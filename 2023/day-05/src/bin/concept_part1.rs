@@ -25,16 +25,18 @@ impl Solve for &str {
         seed_to_soil_num_rows.remove(0);
 
         for row in seed_to_soil_num_rows {
+            
             let nums: Vec<&str> = row.split(" ").collect();
             let mut dest_range_start = nums[0].trim().parse::<u128>().unwrap();
             let mut src_range_start = nums[1].trim().parse::<u128>().unwrap();
             let range = nums[2].trim().parse::<u128>().unwrap();
-
             seed_soil_map.insert(src_range_start, dest_range_start);
             for _ in 2..=range {
+                
                 src_range_start += 1;
                 dest_range_start += 1;
                 seed_soil_map.insert(src_range_start.clone(), dest_range_start.clone());
+                println!("{:#?}", seed_soil_map.get(&src_range_start.clone()));
             }
         }
 
@@ -159,38 +161,37 @@ impl Solve for &str {
         }
         // ---------------------------------------------------
         // ---------------------------------------------------
-        println!("im still doing something! ");
         let mut location_nums: Vec<u128> = vec![];
 
         // turn into function usages
         for seed_num in seed_nums {
             let seed_num = seed_num.trim().parse::<u128>().unwrap();
-            let mut soil_test = seed_soil_map.get(&seed_num);
-            let mut soil_num;
+            let soil_test = seed_soil_map.get(&seed_num);
+            let soil_num;
             if soil_test.is_none() {
                 soil_num = seed_num;
             } else {
                 soil_num = *soil_test.unwrap();
             }
 
-            let mut fertilizer_test = soil_fertilizer_map.get(&soil_num);
-            let mut fertilizer_num;
+            let fertilizer_test = soil_fertilizer_map.get(&soil_num);
+            let fertilizer_num;
             if fertilizer_test.is_none() {
                 fertilizer_num = soil_num;
             } else {
                 fertilizer_num = *fertilizer_test.unwrap();
             }
 
-            let mut water_test = fertilizer_water_map.get(&fertilizer_num);
-            let mut water_num;
+            let water_test = fertilizer_water_map.get(&fertilizer_num);
+            let water_num;
             if water_test.is_none() {
                 water_num = fertilizer_num;
             } else {
                 water_num = *water_test.unwrap();
             }
 
-            let mut light_test = water_light_map.get(&water_num);
-            let mut light_num;
+            let light_test = water_light_map.get(&water_num);
+            let light_num;
             if light_test.is_none() {
                 light_num = water_num;
             } else {

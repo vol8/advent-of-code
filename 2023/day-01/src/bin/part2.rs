@@ -5,53 +5,55 @@ fn replace_spelled_with_digit(line: &str) -> String {
     let mut line = line.to_owned();
 
     loop {
-        let chunk = &line[i..];
-        // why x? I think because of array stuff idk
-        if chunk.starts_with("one") {
-            line.replace_range(i..i+3, "1");
-            i += "one".len();
-        } else if chunk.starts_with("two") {
-            line.replace_range(i..i+3, "2xx");
-            i += "two".len();
-        } else if chunk.starts_with("three") {
-            line.replace_range(i..i+5, "3xxxx");
-            i += "three".len();
-        } else if chunk.starts_with("four") {
-            line.replace_range(i..i+4, "4xxx");
-            i += "four".len();
-        } else if chunk.starts_with("five") {
-            line.replace_range(i..i+4, "5xxx");
-            i += "five".len();
-        } else if chunk.starts_with("six") {
-            line.replace_range(i..i+3, "6xx");
-            i += "six".len();
-        } else if chunk.starts_with("seven") {
-            line.replace_range(i..i+5, "7xxxx");
-            i += "seven".len();
-        } else if chunk.starts_with("eight") {
-            line.replace_range(i..i+5, "8xxxx");
-            i += "eight".len();
-        } else if chunk.starts_with("nine") {
-            line.replace_range(i..i+4, "9xxx");
-            i += "nine".len();
-        }
+        let chunk = &line[i..line.len()];
 
-        else {
+        // ---------------------------------------------------------
+        // Problem: eighttwone => 8ight2w1ne => 821 => 81 and not 82
+        // ---------------------------------------------------------
+        // And because of `twone` (the o is used by both) we only increment i by 1 so that for `one` in `twone` it uses the o after `two` got replaced => `2wone`!
+        if chunk.starts_with("one") {
+            line.replace_range(i..i + 3, "1ne");
+            i += 1;
+        } else if chunk.starts_with("two") {
+            line.replace_range(i..i + 3, "2wo");
+            i += 1;
+        } else if chunk.starts_with("three") {
+            line.replace_range(i..i + 5, "3hree");
+            i += 1;
+        } else if chunk.starts_with("four") {
+            line.replace_range(i..i + 4, "4our");
+            i += 1;
+        } else if chunk.starts_with("five") {
+            line.replace_range(i..i + 4, "5ive");
+            i += 1;
+        } else if chunk.starts_with("six") {
+            line.replace_range(i..i + 3, "6ix");
+            i += 1;
+        } else if chunk.starts_with("seven") {
+            line.replace_range(i..i + 5, "7even");
+            i += 1;
+        } else if chunk.starts_with("eight") {
+            line.replace_range(i..i + 5, "8ight");
+            i += 1;
+        } else if chunk.starts_with("nine") {
+            line.replace_range(i..i + 4, "9ine");
+            i += 1;
+        } else {
             i += 1;
         }
-        if i >= line.len()  {break;}
-        
+
+        if i == line.len() {
+            break;
+        }
     }
-    println!("{line}");
     line
 }
 
-
+// From part1.rs
 fn solve(input: &str) -> u32 {
-    let n = input
+    let n: Vec<Vec<char>> = input
         .lines()
         .map(|line| {
-            //let line = replace_spelled_with_digit(line);
             replace_spelled_with_digit(line)
                 .chars()
                 .filter(|c| c.is_ascii_digit())
@@ -60,7 +62,7 @@ fn solve(input: &str) -> u32 {
         .collect::<Vec<_>>();
 
     let mut result = 0;
-    for cl in n.iter() {
+    for cl in n {
         let n1 = cl[0].to_digit(10).unwrap();
         let n2 = cl.iter().rev().collect::<Vec<_>>()[0].to_digit(10).unwrap();
         result += n1 * 10 + n2;
@@ -76,13 +78,17 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]
     fn it_works() {
         let input = include_str!("../../example.txt");
-
         assert_eq!(281, solve(input))
+    }
+
+    #[test]
+    fn it_works_chris_biscardi() {
+        let input = include_str!("../../chris_biscardi_input.txt");
+        assert_eq!(54925, solve(input))
     }
 }
